@@ -2,8 +2,11 @@ package dev.cordeiro.calculadora;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class CalculadoraForm extends JFrame {
+public abstract class CalculadoraForm extends JFrame {
+
+    private static final int TAMANHO_TXT = 10;
 
     protected JPanel panelEnd;
     protected JPanel panelCenter;
@@ -28,11 +31,11 @@ public class CalculadoraForm extends JFrame {
 
     public CalculadoraForm(){
         this.initComponents();
+        this.eventActions();
     }
 
     public void initComponents(){
         this.setTitle("Calculadora de juros compostos");
-        this.setSize(640,480);
         //Operacao padrao para quando fechar a janela
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         // ContentPane -> minha tela principal
@@ -43,11 +46,29 @@ public class CalculadoraForm extends JFrame {
         // Adiciono a minha tela principal um painel, especificando o local onde ele vai ficar
         // BorderLayout.PAGE_END defino que ira ficar no rodapé
         this.getContentPane().add(getPanelEnd(), BorderLayout.PAGE_END);
-
         this.getContentPane().add(getPanelCenter(), BorderLayout.CENTER);
 
+        // Para não permitir redimensionar a tela
+        this.setResizable(false);
+
+        // AJUSTA O TAMANHO DA TELA DE ACORDO COM OS COMPONENTES
+        pack();
+    }
+
+
+    //CRIO METODOS ABSTRATOS PARA IMPLEMENTAR O QUE CADA BOTAO VAI FAZER
+    protected abstract void btnExitClick(ActionEvent ev);
+    protected abstract void btnClearClick(ActionEvent ev);
+    protected abstract void btnCalcClick(ActionEvent ev);
+
+    //ADICIONO AS AÇÕES DOS BOTÕES A UM METODO ABSTRATO A SER IMPLEMENTADO
+    public void eventActions(){
+        btnExit.addActionListener(this::btnExitClick);
+        btnClear.addActionListener(this::btnClearClick);
+        btnCalc.addActionListener(this::btnCalcClick);
 
     }
+
 
     public JPanel getPanelEnd() {
         if(panelEnd == null){
@@ -78,16 +99,17 @@ public class CalculadoraForm extends JFrame {
             panelCenter = new JPanel(new GridLayout(4,2));
 
             lblCapital = new JLabel("Capital");
-            txtCapital = new JTextField(20);
+            txtCapital = new JTextField(TAMANHO_TXT);
 
             lblInterestRate = new JLabel("Juros");
-            txtInterestRate = new JTextField(20);
+            txtInterestRate = new JTextField(TAMANHO_TXT);
 
             lblPeriod = new JLabel("Period");
-            txtPeriod = new JTextField(20);
+            txtPeriod = new JTextField(TAMANHO_TXT);
 
             lblResult = new JLabel("Montante");
-            txtResult = new JTextField(20);
+            txtResult = new JTextField(TAMANHO_TXT);
+            txtResult.setEnabled(false);
 
             panelCenter.add(lblCapital);
             panelCenter.add(txtCapital);
